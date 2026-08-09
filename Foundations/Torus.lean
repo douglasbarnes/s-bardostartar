@@ -201,7 +201,7 @@ theorem crossR_swap (k l : WaveVec) : crossR l k = -crossR k l := by
   rw [dotZ_perp_perp]
 
 /-- Paper §2 Fourier notation (`D_ℕ = ℤ² \ {0}`): nonzero Fourier mode. -/
-def NonzeroMode := {k : WaveVec // k ≠ 0}
+abbrev NonzeroMode := {k : WaveVec // k ≠ 0}
 
 /-- Paper Appendix equation `trigpoly`: scalar Fourier monomial, represented by Mathlib's
 multidimensional unit-torus monomial. -/
