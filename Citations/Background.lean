@@ -29,7 +29,7 @@ the `L²` metric.  `A` is a placeholder only for recording the proposition's sha
 assertion is made for arbitrary sets. -/
 def nse_globalAttractor_finiteHausdorffDimension_statement
     {H : Type u} [EMetricSpace H] (A : Set H) : Prop :=
-  MeasureTheory.dimH A < ⊤
+  dimH A < ⊤
 
 /-- **Citation statement: `Bourgain`, `BabinIlyinTiti` (no theorem number supplied at
 the paper use-site).**
