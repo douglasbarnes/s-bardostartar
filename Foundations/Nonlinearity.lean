@@ -13,10 +13,9 @@ normalisation.
 The paper's `β(p,q)` is then proved by symmetrising the ordered pair.  No nonlinear Fourier
 formula is postulated as an assumption.
 
-Source note: in the proof of the paper lemma `expression to upper bound P_NB(u,u)^2`, one
-intermediate displayed numerator has the opposite sign from the subsequently declared `β`.
-`betaR_formula` below derives the declared `β` sign directly by averaging the two ordered
-contributions; no sign is imported from that intermediate display.
+The paper's convolution lemma ultimately takes absolute values, so the sign convention in its
+intermediate displayed coefficient is immaterial for that upper bound.  The exact signed `β`
+formula needed later is derived here independently by averaging the two ordered contributions.
 -/
 
 namespace BardosTartar
@@ -67,7 +66,7 @@ def interactionDenom (p q : WaveVec) : ℝ :=
 
 @[simp] theorem interactionDenom_swap (p q : WaveVec) :
     interactionDenom q p = interactionDenom p q := by
-  simp [interactionDenom, add_comm, mul_comm, mul_left_comm, mul_assoc]
+  simp [interactionDenom, add_comm, mul_comm, mul_left_comm]
 
 /-- Unsymmetrised real interaction factor coming from the direct Fourier computation of
 `P((φ_p · ∇) φ_q)` in the paper-normalised basis. -/
@@ -85,7 +84,6 @@ theorem basisDerivedInteractionR_eq_orderedInteractionR
   unfold orderedInteractionR interactionDenom
   field_simp [paperPeriod_ne_zero, waveNorm_ne_zero hp, waveNorm_ne_zero hq,
     waveNorm_ne_zero hout]
-  ring
 
 /-- Complex unsymmetrised interaction coefficient. -/
 def orderedInteraction (p q : WaveVec) : ℂ :=
@@ -134,22 +132,38 @@ theorem beta_formula (p q : WaveVec) :
 /-- Unsymmetrised ordered contributions add to twice the paper coefficient. -/
 theorem orderedInteraction_add_swap (p q : WaveVec) :
     orderedInteraction p q + orderedInteraction q p = 2 * beta p q := by
-  simp [orderedInteraction, beta, betaR]
-  push_cast
+  have hreal :
+      orderedInteractionR p q + orderedInteractionR q p = 2 * betaR p q := by
+    unfold betaR
+    ring
+  calc
+    orderedInteraction p q + orderedInteraction q p =
+        Complex.I * ((orderedInteractionR p q + orderedInteractionR q p : ℝ) : ℂ) := by
+      simp [orderedInteraction, mul_add]
+    _ = Complex.I * ((2 * betaR p q : ℝ) : ℂ) := by rw [hreal]
+    _ = 2 * beta p q := by
+      rw [show ((2 * betaR p q : ℝ) : ℂ) = 2 * (betaR p q : ℂ) by norm_num]
+      rw [beta]
+      ring
+
+/-- The real scalar underlying `β` is symmetric. -/
+@[simp] theorem betaR_swap (p q : WaveVec) : betaR q p = betaR p q := by
+  unfold betaR
   ring
 
 /-- `β` is symmetric in its two input modes. -/
 @[simp] theorem beta_swap (p q : WaveVec) : beta q p = beta p q := by
-  simp [beta, betaR]
-  ring
+  simp [beta]
 
 /-- Simultaneous sign reversal leaves the ordered real interaction unchanged. -/
 @[simp] theorem orderedInteractionR_neg_neg (p q : WaveVec) :
     orderedInteractionR (-p) (-q) = orderedInteractionR p q := by
   have hsum : (-p) + (-q) = -(p + q) := by abel
-  rw [orderedInteractionR, orderedInteractionR, hsum]
-  simp [interactionDenom, dotR, dotZ, crossR, crossZ]
-  ring
+  have hdot : dotR (-q) (-(p + q)) = dotR q (p + q) := by
+    simp [dotR, dotZ] <;> ring
+  unfold orderedInteractionR interactionDenom
+  rw [hsum, hdot]
+  simp only [crossR_neg_neg, waveNorm_neg]
 
 /-- Simultaneous sign reversal leaves `β` unchanged. -/
 @[simp] theorem beta_neg_neg (p q : WaveVec) : beta (-p) (-q) = beta p q := by
@@ -182,8 +196,7 @@ theorem beta_eq_zero_of_equalMagnitude {p q : WaveVec} (h : EqualMagnitude p q) 
 /-- In particular, opposite modes do not interact into the zero mode. -/
 @[simp] theorem beta_add_neg (p : WaveVec) : beta p (-p) = 0 := by
   apply beta_eq_zero_of_parallel
-  unfold ModesParallel crossZ
-  ring
+  simpa [ModesParallel, crossZ, mul_comm]
 
 /-- Paper lemma `expression to upper bound P_NB(u,u)^2`: a single contribution obtained
 directly from the Fourier differentiation/contraction/Leray-projection computation before the
@@ -265,8 +278,14 @@ theorem orderedTerm_add_swap (u : TrigPoly) (ell p q : WaveVec) :
   by_cases h : p + q = ell
   · have h' : q + p = ell := by simpa [add_comm] using h
     simp only [orderedTerm, betaTerm, h, h', if_true]
-    rw [orderedInteraction_add_swap]
-    ring
+    calc
+      orderedInteraction p q * u.fourierCoeff p * u.fourierCoeff q +
+          orderedInteraction q p * u.fourierCoeff q * u.fourierCoeff p =
+          (orderedInteraction p q + orderedInteraction q p) *
+            u.fourierCoeff p * u.fourierCoeff q := by ring
+      _ = 2 * beta p q * u.fourierCoeff p * u.fourierCoeff q := by
+        rw [orderedInteraction_add_swap]
+      _ = 2 * (beta p q * u.fourierCoeff p * u.fourierCoeff q) := by ring
   · have h' : q + p ≠ ell := by simpa [add_comm] using h
     simp [orderedTerm, betaTerm, h, h']
 
