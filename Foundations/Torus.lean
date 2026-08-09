@@ -82,7 +82,7 @@ def perp (k : WaveVec) : WaveVec := (-k.2, k.1)
   ext <;> simp [perp]
 
 @[simp] theorem perp_add (k l : WaveVec) : perp (k + l) = perp k + perp l := by
-  ext <;> simp [perp]
+  ext <;> simp [perp, add_comm]
 
 /-- Integer bilinear dot product. -/
 def dotZ (k l : WaveVec) : ℤ := k.1 * l.1 + k.2 * l.2
@@ -98,13 +98,12 @@ def crossZ (k l : WaveVec) : ℤ := k.1 * l.2 - k.2 * l.1
   simp [crossZ]
   ring
 
-@[simp] theorem crossZ_swap (k l : WaveVec) : crossZ l k = -crossZ k l := by
+theorem crossZ_swap (k l : WaveVec) : crossZ l k = -crossZ k l := by
   simp [crossZ]
   ring
 
 @[simp] theorem crossZ_neg_neg (k l : WaveVec) : crossZ (-k) (-l) = crossZ k l := by
   simp [crossZ]
-  ring
 
 @[simp] theorem dotZ_perp_left (k l : WaveVec) : dotZ (perp k) l = crossZ k l := by
   simp [dotZ, perp, crossZ]
@@ -162,7 +161,6 @@ theorem waveNorm_sq (k : WaveVec) : waveNorm k ^ 2 = sqNorm k := by
 
 @[simp] theorem sqNormZ_neg (k : WaveVec) : sqNormZ (-k) = sqNormZ k := by
   simp [sqNormZ, dotZ]
-  ring
 
 @[simp] theorem sqNorm_neg (k : WaveVec) : sqNorm (-k) = sqNorm k := by
   simp [sqNorm]
@@ -189,14 +187,18 @@ def crossR (k l : WaveVec) : ℝ := (crossZ k l : ℝ)
 @[simp] theorem dotR_comm (k l : WaveVec) : dotR k l = dotR l k := by
   simp [dotR]
 
-@[simp] theorem crossR_swap (k l : WaveVec) : crossR l k = -crossR k l := by
-  simp [crossR]
+theorem crossR_swap (k l : WaveVec) : crossR l k = -crossR k l := by
+  unfold crossR
+  rw [crossZ_swap]
+  norm_num
 
 @[simp] theorem crossR_neg_neg (k l : WaveVec) : crossR (-k) (-l) = crossR k l := by
-  simp [crossR]
+  unfold crossR
+  rw [crossZ_neg_neg]
 
 @[simp] theorem dotR_perp_perp (k l : WaveVec) : dotR (perp k) (perp l) = dotR k l := by
-  simp [dotR]
+  unfold dotR
+  rw [dotZ_perp_perp]
 
 /-- Paper §2 Fourier notation (`D_ℕ = ℤ² \ {0}`): nonzero Fourier mode. -/
 def NonzeroMode := {k : WaveVec // k ≠ 0}
@@ -240,7 +242,7 @@ unnormalised Lebesgue area on `[0,2π]²`. -/
 def paperArea : ℝ := paperPeriod ^ 2
 
 @[simp] theorem paperArea_pos : 0 < paperArea := by
-  unfold paperArea
+  unfold paperArea paperPeriod
   positivity
 
 end
