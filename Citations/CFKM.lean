@@ -1,5 +1,5 @@
 import Mathlib
-import BardosTartar.Citations.Interfaces
+import Citations.Interfaces
 
 /-!
 # Constantin--Foias--Kukavica--Majda weak-density input
