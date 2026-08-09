@@ -1,12 +1,13 @@
 import Mathlib
 
 /-!
-# Time analyticity citation
+# Time-analyticity citation statement
 
-The recurrence argument in the paper uses only the local power-series expansion and the
-geometric coefficient bound recorded below.  `isNSESolutionOn` is an adapter hook: it is
-to be instantiated with the project's concrete 2D periodic Navier--Stokes solution
-predicate, rather than with a second PDE representation in this citation file.
+The recurrence argument in the paper uses the local power-series expansion and geometric
+coefficient bound recorded below.  The repository did not yet contain the concrete 2D
+periodic Navier--Stokes solution predicate when Wave 1 Agent C began, so the exact cited
+result is recorded as a proposition-valued interface rather than asserted for an
+arbitrary predicate.
 -/
 
 namespace BardosTartar.Citations
@@ -36,20 +37,26 @@ def HasZeroExpansionWithGeometricBound
     (∀ t : ℝ, |t| < τ' → HasSum (fun m : ℕ => (t ^ m) • U m) (u t)) ∧
     ∀ m : ℕ, ‖U m‖ ≤ C ^ m
 
-/-- **Citation: `gevrey`, Theorem 1.1.**
+/-- **Citation statement: `gevrey`, Theorem 1.1.**
 
 Paper location: proof of Theorem `eve`, Proposition `an`.
 
-If a 2D Navier--Stokes solution exists on `t > -τ`, then it is real analytic there;
-in particular it has a power-series expansion about zero on a smaller symmetric
-interval and its coefficients obey a geometric `L²`-norm bound.  The paper further
-deduces the same bound for each Fourier coefficient from Parseval/Cauchy--Schwarz; that
-deduction is intentionally not included in this axiom. -/
-axiom gevrey_theorem1_1
+For the concrete 2D periodic Navier--Stokes solution relation, a solution existing on
+`t > -τ` is real analytic there; in particular it has a power-series expansion about
+zero on a smaller symmetric interval and its coefficients obey a geometric `L²`-norm
+bound.  The paper further derives the corresponding Fourier-coefficient bound from the
+Hilbert/Fourier structure; that deduction is intentionally not part of this cited
+statement.
+
+`isNSESolutionOn` is an adapter parameter only.  This declaration does not assert the
+proposition for arbitrary predicates; after the foundation API supplies the concrete NSE
+solution predicate, Agent I/integration can specialize this proposition and add the
+citation axiom without strengthening the source. -/
+def gevrey_theorem1_1_statement
     {H : Type u} [NormedAddCommGroup H] [NormedSpace ℝ H] [CompleteSpace H]
-    (isNSESolutionOn : Set ℝ → (ℝ → H) → Prop)
-    (u : ℝ → H) (τ : ℝ) (hτ : 0 < τ)
-    (hsol : isNSESolutionOn (Ioi (-τ)) u) :
+    (isNSESolutionOn : Set ℝ → (ℝ → H) → Prop) : Prop :=
+  ∀ u : ℝ → H, ∀ τ : ℝ, 0 < τ →
+    isNSESolutionOn (Ioi (-τ)) u →
     RealAnalyticOnPaper u (Ioi (-τ)) ∧ HasZeroExpansionWithGeometricBound u τ
 
 end BardosTartar.Citations
