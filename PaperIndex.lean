@@ -14,29 +14,34 @@ Wave 1 Agent C owns only this citation index.  Later integration agents may appe
 paper-original declarations, but externally cited assumptions must continue to live in
 `Citations/` only.
 
-At this wave boundary, only model-independent citations whose exact mathematical objects
-are already available are asserted as axioms (`dudley_lemma1` and
-`erdos_unbounded_sum_two_squares_gaps`).  PDE-specific citations are indexed as typed
-statement interfaces pending the concrete periodic Navier--Stokes foundation API; this
-avoids asserting literature results for arbitrary adapter predicates/dynamics.
+The final citation-policy boundary is: each imported theorem becomes an individually
+named assumption on the canonical project objects.  At present the model-independent
+Dudley and Erdős inputs satisfy that boundary.  PDE-specific citations remain typed
+statement interfaces only because the repository still lacks the canonical `H`/`V`
+phase-space bridge and NSE solution semigroup; `API_REQUESTS/agent-c.md` records that
+remaining dependency.
 -/
 
 namespace BardosTartar.PaperIndex
 
--- Classical periodic NSE citation statements.
+-- Classical periodic NSE citation statements: must become concrete axioms after the
+-- canonical phase-space/dynamics bridge lands.
 #check BardosTartar.Citations.constantinFoias_temam_periodic2D_wellPosedness_statement
 #check BardosTartar.Citations.bardosTartar_periodic2D_backwardsUniqueness_statement
 #check BardosTartar.Citations.constantinFoias_bardosTartar_periodic2D_strongDissipation_statement
 
--- CFKM citation statements.
+-- CFKM citation statements.  The exact source theorem is 2D-NSE-specific; the paper's
+-- abstract `weakBTcon` adaptation remains a project proof obligation.
 #check BardosTartar.Citations.cfkm_lemma3_9_theorem3_1_statement
 #check BardosTartar.Citations.cfkm_backwardTrajectory_classification_statement
 
--- Time analyticity statement; to be specialized to the concrete NSE solution relation.
+-- Gevrey Theorem 1.1 interface: analyticity only.  The zero-centred expansion and its
+-- coefficient-growth estimate are downstream deductions, not citation assumptions.
 #check BardosTartar.Citations.gevrey_theorem1_1_statement
 
 -- Exact, model-independent citation axioms.
 #check BardosTartar.Citations.dudley_lemma1
+#check BardosTartar.Citations.dudley_polynomial_sup_bound
 #check BardosTartar.Citations.erdos_unbounded_sum_two_squares_gaps
 
 -- Introduction-only mathematical background statements.
