@@ -44,13 +44,16 @@ def periodicKdV_globalExtendability_statement
     {X : Type u} (isKdVSolution : (ℝ → X) → Prop) : Prop :=
   ∀ x0 : X, HasGlobalTrajectoryThrough isKdVSolution x0
 
-/-- **Citation statement: `GuoTiti` (no theorem number supplied at the paper use-site).**
+/-- **Citation statement: `GuoTiti`, Theorem 1.1(ii).**
 
 Paper location: Introduction, paragraph discussing backward behaviour of dissipative
 perturbations of KdV.
 
-For the KdV--Burgers--Sivashinsky type equation treated in the cited work, a trajectory
-that is global in both time directions belongs to the global attractor. -/
+Guo--Titi Theorem 1.1(ii) states, for the dissipative KdV--Burgers--Sivashinsky case,
+that a solution outside the global attractor cannot be extended globally backward in
+time.  Equivalently, every complete trajectory lies in the global attractor.  The
+concrete KBS phase space is not part of this project, so this remains a typed background
+statement rather than an axiom over an arbitrary model. -/
 def guoTiti_kbs_globalTrajectory_mem_attractor_statement
     {X : Type u} (isGlobalKBSTrajectory : X → Prop) (attractor : Set X) : Prop :=
   ∀ x : X, isGlobalKBSTrajectory x → x ∈ attractor
