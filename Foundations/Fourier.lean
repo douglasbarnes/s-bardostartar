@@ -51,7 +51,7 @@ theorem modeC_cdot_phi (k : WaveVec) (x : Torus2) : cdot (modeC k) (phi k x) = 0
 /-- The sign in the paper's coefficient reality condition comes from
 `φ₋ₖ = -conj(φₖ)`. -/
 theorem phi_neg (k : WaveVec) (x : Torus2) : phi (-k) x = -vecConj (phi k x) := by
-  apply Prod.ext <;> simp [phi, vecConj, waveNorm_neg]
+  apply Prod.ext <;> simp [phi, vecConj, waveNorm_neg] <;> ring
 
 /-- Paper §2, Fourier notation display: paper-normalised basis on `[0,2π]²`,
 `φₖ(x) = kᗮ/(2π |k|) exp(i k·x)`.
