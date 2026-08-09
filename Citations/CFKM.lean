@@ -2,11 +2,13 @@ import Mathlib
 import Citations.Interfaces
 
 /-!
-# Constantin--Foias--Kukavica--Majda weak-density input
+# Constantin--Foias--Kukavica--Majda weak-density citation statement
 
-This file contains only the result imported from external literature.  The paper later
-specialises/adapts this input to its hyperviscous semigroup; those adaptations are not
-axioms here.
+The paper states an abstract `weakBTcon` theorem and then says that CFKM Lemma 3.9 /
+Theorem 3.1 gives the result in the specific 2D periodic NSE case.  Because the concrete
+NSE model is not yet present in the repository, and because the abstract adaptation is
+not literally the cited source theorem, this file records the full paper-facing contract
+and conclusion but does not assert the abstract adaptation as a literature axiom.
 -/
 
 namespace BardosTartar.Citations
@@ -64,19 +66,21 @@ structure WeakBTConditions {H : Type u} [NormedAddCommGroup H] [NormedSpace ℝ 
       ∀ t : ℝ, t ∈ Icc 0 T →
         d.energyNorm (d.S t u0) ≥ d.energyNorm u0 * g n t
 
-/-- **Citation: `cfkm`, Lemma 3.9 / Theorem 3.1.**
+/-- **Citation statement: `cfkm`, Lemma 3.9 / Theorem 3.1.**
 
 Paper location: Appendix, section `Regularity of the Hyperviscous NSE`, theorem
 `weak density proposition` (and the introduction's weak-density discussion).
 
-This is the paper-facing interface to the CFKM weak-density construction: prescribed
+This is the paper-facing signature of the CFKM weak-density construction: prescribed
 low modes admit a complete trajectory, with the stated backward Dirichlet-quotient
-alternative and quantitative high-mode bound.  No proof of the CFKM construction is
-reproduced here. -/
-axiom cfkm_lemma3_9_theorem3_1
+alternative and quantitative high-mode bound.  The declaration is a proposition, not an
+axiom: the uploaded paper identifies CFKM with the specific 2D NSE case, whereas the
+abstract `WeakBTConditions` generalization is an adaptation that must either be proved or
+specialized to the concrete NSE model during integration. -/
+def cfkm_lemma3_9_theorem3_1_statement
     {H : Type u} [NormedAddCommGroup H] [NormedSpace ℝ H]
-    (d : DynamicsData H) (hweak : WeakBTConditions d)
-    (n : ℕ) (hn : 0 < n) (v : H) (hv : d.P n v = v) :
+    (d : DynamicsData H) : Prop :=
+  ∀ n : ℕ, 0 < n → ∀ v : H, d.P n v = v →
     ∃ u : ℝ → H,
       IsCompleteOrbit d u ∧
       d.P n (u 0) = v ∧
