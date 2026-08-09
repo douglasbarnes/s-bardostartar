@@ -29,17 +29,17 @@ structure DynamicsData (H : Type u) [NormedAddCommGroup H] [NormedSpace ℝ H] w
   E4 : ℝ
 
 /-- The paper's Dirichlet quotient `Φ(u)=‖u‖²/|u|²`. -/
-def dirichletQuotient {H : Type u} [NormedAddCommGroup H] [NormedSpace ℝ H]
+noncomputable def dirichletQuotient {H : Type u} [NormedAddCommGroup H] [NormedSpace ℝ H]
     (d : DynamicsData H) (u : H) : ℝ :=
   d.enstrophyNorm u ^ 2 / d.energyNorm u ^ 2
 
 /-- `\tilde λ_n=(λ_n+λ_{n+1})/2` from the paper. -/
-def midLambda {H : Type u} [NormedAddCommGroup H] [NormedSpace ℝ H]
+noncomputable def midLambda {H : Type u} [NormedAddCommGroup H] [NormedSpace ℝ H]
     (d : DynamicsData H) (n : ℕ) : ℝ :=
   (d.lambda n + d.lambda (n + 1)) / 2
 
 /-- `γ_n=(λ_{n+1}+λ_n)/(λ_{n+1}-λ_n)` from the paper. -/
-def spectralGamma {H : Type u} [NormedAddCommGroup H] [NormedSpace ℝ H]
+noncomputable def spectralGamma {H : Type u} [NormedAddCommGroup H] [NormedSpace ℝ H]
     (d : DynamicsData H) (n : ℕ) : ℝ :=
   (d.lambda (n + 1) + d.lambda n) / (d.lambda (n + 1) - d.lambda n)
 
@@ -59,7 +59,7 @@ def LimsupAtBotLE (f : ℝ → ℝ) (L : ℝ) : Prop :=
   ∀ ε : ℝ, 0 < ε → ∃ T : ℝ, ∀ t : ℝ, t < T → f t ≤ L + ε
 
 /-- The tail bound appearing in the paper's CFKM-derived weak-density theorem. -/
-def paperTailBound {H : Type u} [NormedAddCommGroup H] [NormedSpace ℝ H]
+noncomputable def paperTailBound {H : Type u} [NormedAddCommGroup H] [NormedSpace ℝ H]
     (d : DynamicsData H) (n : ℕ) (v : H) : ℝ :=
   max d.E1 (max d.E2 (max d.E3 (max d.E4
     (spectralGamma d n * d.energyNorm v ^ 2))))
