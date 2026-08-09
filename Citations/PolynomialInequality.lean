@@ -29,4 +29,17 @@ axiom dudley_lemma1
       P.natDegree ≤ d →
       polynomialSupAbsOn (Icc a b) P ≤ C ^ d * polynomialSupAbsOn E P
 
+/-- Paper-facing spelling of Dudley Lemma 1 requested by the polynomial-bound layer.
+This is only a theorem alias/unfolding of `dudley_lemma1`; it introduces no additional
+assumption. -/
+theorem dudley_polynomial_sup_bound
+    (a b : ℝ) (E : Set ℝ)
+    (hclosed : IsClosed E) (hsub : E ⊆ Icc a b)
+    (hmeasure : 0 < MeasureTheory.volume E) :
+    ∃ K : ℝ, 0 < K ∧ ∀ d : ℕ, ∀ P : Polynomial ℝ,
+      P.natDegree ≤ d →
+      sSup ((fun x : ℝ => |P.eval x|) '' Icc a b) ≤
+        K ^ d * sSup ((fun x : ℝ => |P.eval x|) '' E) := by
+  simpa [polynomialSupAbsOn] using dudley_lemma1 a b E hclosed hsub hmeasure
+
 end BardosTartar.Citations
