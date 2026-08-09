@@ -1,4 +1,5 @@
 import Mathlib
+import Mathlib.Topology.MetricSpace.HausdorffDimension
 
 /-!
 # Cited mathematical background from the introduction
