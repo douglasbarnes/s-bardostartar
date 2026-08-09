@@ -48,3 +48,24 @@
 - **Difficulty:** before the concrete phase-space/solution APIs exist, an axiom quantified over an arbitrary `DynamicsData`, arbitrary `isNSESolutionOn`, or arbitrary attractor predicate would say much more than the cited theorem and can be instantiated with objects unrelated to the cited PDE. This violates the project's rule against silently strengthening or reinterpreting source statements.
 - **Lean statement attempted:** these items are therefore proposition-valued `..._statement` declarations only. The only active citation axioms at this wave boundary are the model-independent `dudley_lemma1` and `erdos_unbounded_sum_two_squares_gaps`.
 - **Smallest correction/clarification:** expose the concrete periodic 2D NSE types/solution relation/projections/spectrum from the foundation and dynamics layers, then replace each relevant statement interface by one individually documented axiom specialized to those concrete objects. Introduction-only KdV/KS statements need not become project assumptions unless later coverage policy requires executable declarations.
+
+
+# Formalization issues — Wave 1 Agent E
+
+## Appendix, Lemma `poly` (Polynomial coefficient bound)
+
+**Paper location:** Appendix, “Miscellaneous results”, Lemma `poly` and its proof (the interpolation grid `x_i = a + i(b-a)/d`).
+
+**Exact difficulty:** The printed statement quantifies over arbitrary `a,b ∈ ℝ`, but the claimed bound is false on the degenerate interval `a=b`: a polynomial can vanish at the single point `a` while having an arbitrarily large nonconstant coefficient. The printed proof also divides by `b-a`. Separately, the displayed interpolation grid divides by `d`, so the proof as written does not cover the degree-zero case.
+
+**Lean statement attempted:**
+
+```lean
+theorem polynomial_coefficient_bound_interval (a b : ℝ) (hab : a < b) :
+    ∃ C : ℝ, 0 < C ∧
+      ∀ (d : ℕ) (P : ℝ[X]) (M : ℝ), P.natDegree ≤ d → 0 ≤ M →
+        PolynomialBoundedOn (Set.Icc a b) P M →
+        ∀ k : ℕ, |P.coeff k| ≤ C ^ d * M
+```
+
+**Smallest proposed correction / clarification:** Add the nondegeneracy hypothesis `a < b` (equivalently `a ≠ b` after ordering the endpoints), and split `d=0` before defining the equally spaced interpolation grid. This does not alter Lemma `bigpoly`: a compact set of positive Lebesgue measure cannot be a singleton and can be enclosed in a nondegenerate compact interval.
